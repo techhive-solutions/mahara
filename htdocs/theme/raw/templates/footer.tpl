@@ -22,11 +22,6 @@
 
 <footer class="{if $editing == true}editcontent {/if}footer">
     <div class="footer-inner container">
-        <div id="powered-by" class="float-start mahara-logo">
-            <a href="https://mahara.org/">
-                <img src="{theme_image_url filename='powered_by_mahara'}?v={$CACHEVERSION}" alt="Powered by Mahara" class="mahara-footer-logo">
-            </a>
-        </div>
         <!-- This site is powered by Mahara, an Open Source
         ePortfolio system. See https://mahara.org/ for more
         details.
