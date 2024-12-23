@@ -2001,11 +2001,11 @@ function auth_get_login_form_elements() {
             'class' => 'btn-primary btn-block',
             'value' => get_string('login')
         ),
-        'register' => array(
-            'type' => 'markup',
-            'value' => '<div id="login-helplinks" class="login-related-links">' . $registerlink
-                . '<a class="forgotpass-link text-small" href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></div>'
-        ),
+        // 'register' => array(
+        //     'type' => 'markup',
+        //     'value' => '<div id="login-helplinks" class="login-related-links">' . $registerlink
+        //         . '<a class="forgotpass-link text-small" href="' . get_config('wwwroot') . 'forgotpass.php">' . get_string('lostusernamepassword') . '</a></div>'
+        // ),
     );
     $elements = array(
         'login' => array(

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pieforms: Advanced web forms made easy
  * @package    pieform
@@ -72,7 +73,8 @@ class PieformException extends Exception {}
  * For more information on how Pieforms works, please see the documentation
  * at http://pieforms.sourceforge.net/doc/html/
  */
-class Pieform {/*{{{*/
+class Pieform
+{/*{{{*/
 
     /*{{{ Fields */
 
@@ -155,12 +157,12 @@ class Pieform {/*{{{*/
      * @param array $data The form description hash
      * @return string     The HTML representing the form
      */
-    public static function process($data) {/*{{{*/
+    public static function process($data)
+    {/*{{{*/
         $form = new Pieform($data);
         if ($form->get_property('backingout')) {
             return FALSE;
-        }
-        else {
+        } else {
             return $form->build();
         }
     }/*}}}*/
@@ -172,7 +174,8 @@ class Pieform {/*{{{*/
      *
      * @param array $data The form description hash
      */
-    public function __construct($data) {/*{{{*/
+    public function __construct($data)
+    {/*{{{*/
         $GLOBALS['_PIEFORM_REGISTRY'][] = $this;
         /**
          * The third party recaptcha library inserts this in the POST request, which causes it to be failed further
@@ -195,8 +198,7 @@ class Pieform {/*{{{*/
                     $data['elements'][$name] = $element;
                 }
             }
-        }
-        else {
+        } else {
             $formconfig = array();
         }
 
@@ -232,8 +234,11 @@ class Pieform {/*{{{*/
         }
 
         $this->data['configdirs'] = array_map(
-            function($a) { return substr($a, -1) == "/" ? substr($a, 0, -1) : $a; },
-            (array) $this->data['configdirs']);
+            function ($a) {
+                return substr($a, -1) == "/" ? substr($a, 0, -1) : $a;
+            },
+            (array) $this->data['configdirs']
+        );
 
 
         if (empty($this->data['tabindex'])) {
@@ -317,8 +322,7 @@ class Pieform {/*{{{*/
                 foreach (array_keys($this->data['elements']) as $k) {
                     if (isset($order[$k])) {
                         $temp[$order[$k]] = $this->data['elements'][$order[$k]];
-                    }
-                    else {
+                    } else {
                         $temp[$k] = $this->data['elements'][$k];
                     }
                 }
@@ -353,8 +357,7 @@ class Pieform {/*{{{*/
                             $subsubelement['name'] = $subsubname;
                         }
                         unset($subsubelement);
-                    }
-                    else {
+                    } else {
                         if (isset($subelement['name'])) {
                             $subname = $subelement['name'];
                         }
@@ -363,13 +366,11 @@ class Pieform {/*{{{*/
                     }
                 }
                 unset($subelement);
-            }
-            else {
+            } else {
                 $this->elementrefs[$name] = &$element;
             }
 
             $element['name'] = isset($this->hashedfields[$name]) ? $this->hashedfields[$name] : $name;
-
         }
         unset($element);
 
@@ -390,20 +391,18 @@ class Pieform {/*{{{*/
                     if (isset($subelement['type']) && ($subelement['type'] == 'fieldset' || $subelement['type'] == 'container')) {
                         foreach ($subelement['elements'] as $subsubname => $subsubelement) {
                             if (!empty($subsubelement['ignore'])) {
-                                unset ($this->data['elements'][$name]['elements'][$subname]['elements'][$subsubname]);
+                                unset($this->data['elements'][$name]['elements'][$subname]['elements'][$subsubname]);
                                 unset($this->elementrefs[$subsubname]);
                             }
                         }
-                    }
-                    else {
+                    } else {
                         if (!empty($subelement['ignore'])) {
-                            unset ($this->data['elements'][$name]['elements'][$subname]);
+                            unset($this->data['elements'][$name]['elements'][$subname]);
                             unset($this->elementrefs[$subname]);
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 if (!empty($element['ignore'])) {
                     unset($this->data['elements'][$name]);
                     unset($this->elementrefs[$name]);
@@ -424,8 +423,7 @@ class Pieform {/*{{{*/
                     throw new PieformException('The markup element "'
                         . $name . '" has no value');
                 }
-            }
-            else {
+            } else {
                 // Now we know what type the element is, we can load the plugin for it
                 $this->include_plugin('element',  $element['type']);
 
@@ -473,14 +471,17 @@ class Pieform {/*{{{*/
                 if (!$autofocusadded && $this->data['autofocus'] === true && empty($element['nofocus'])) {
                     $element['autofocus'] = true;
                     $autofocusadded = true;
-                }
-                elseif (!empty($this->data['autofocus']) && $this->data['autofocus'] !== true
-                    && $name == $this->data['autofocus']) {
+                } elseif (
+                    !empty($this->data['autofocus']) && $this->data['autofocus'] !== true
+                    && $name == $this->data['autofocus']
+                ) {
                     $element['autofocus'] = true;
                 }
 
-                if (!empty($element['autofocus']) && $element['type'] == 'text' && !empty($this->data['autoselect'])
-                    && $name == $this->data['autoselect']) {
+                if (
+                    !empty($element['autofocus']) && $element['type'] == 'text' && !empty($this->data['autoselect'])
+                    && $name == $this->data['autoselect']
+                ) {
                     $element['autoselect'] = true;
                 }
 
@@ -491,9 +492,9 @@ class Pieform {/*{{{*/
         unset($element);
 
         // Check if the form was submitted, and if so, validate and process it
-        $global = ($this->data['method'] == 'get') ? $_GET: $_POST;
+        $global = ($this->data['method'] == 'get') ? $_GET : $_POST;
 
-        if ($this->data['validate'] && isset($global['pieform_' . $this->name] )) {
+        if ($this->data['validate'] && isset($global['pieform_' . $this->name])) {
             if ($this->data['submit']) {
                 $this->submitted = true;
                 $this->submitvalue = isset($global['submit']) ? $global['submit'] : '';
@@ -564,21 +565,18 @@ class Pieform {/*{{{*/
                     if ($this->data['dieaftersubmit']) {
                         if ($this->data['jsform']) {
                             $message = 'Your ' . $this->name . '_submit function should use $form->reply to send a response, which should redirect or exit when it is done. Perhaps you want to make your reply callback do this?';
-                        }
-                        else {
+                        } else {
                             $message = 'Your ' . $this->name . '_submit function should redirect or exit when it is done';
                         }
                         throw new PieformException($message);
-                    }
-                    else {
+                    } else {
                         // Successful submission, and the user doesn't care about replying, so...
                         if (isset($this->data['backoutaftersubmit'])) {
                             $this->data['backingout'] = TRUE;
                         }
                         return;
                     }
-                }
-                else if (!$submitted) {
+                } else if (!$submitted) {
                     throw new PieformException('No function registered to handle form submission for form "' . $this->name . '"');
                 }
             }
@@ -608,14 +606,12 @@ class Pieform {/*{{{*/
                 //}
                 $message = $this->get_property('jserrormessage');
                 $this->json_reply(PIEFORM_ERR, array('message' => $message));
-            }
-            else {
+            } else {
                 global $SESSION;
                 // The login system comes past here twice so we need to paste first error message above form
                 if (isset($values['pieform_login'])) {
                     $SESSION->add_error_msg($this->get_property('errormessage'), false, 'loginbox');
-                }
-                else {
+                } else {
                     $SESSION->add_error_msg($this->get_property('errormessage'));
                 }
             }
@@ -627,7 +623,8 @@ class Pieform {/*{{{*/
      *
      * @return string
      */
-    public function get_name() {/*{{{*/
+    public function get_name()
+    {/*{{{*/
         return $this->name;
     }/*}}}*/
 
@@ -636,7 +633,8 @@ class Pieform {/*{{{*/
      *
      * @return string
      */
-    public function get_submitvalue() {/*{{{*/
+    public function get_submitvalue()
+    {/*{{{*/
         return $this->submitvalue;
     }/*}}}*/
 
@@ -649,7 +647,8 @@ class Pieform {/*{{{*/
      *               exist, null is returned
      * @return mixed
      */
-    public function get_property($key) {/*{{{*/
+    public function get_property($key)
+    {/*{{{*/
         if (array_key_exists($key, $this->data)) {
             return $this->data[$key];
         }
@@ -663,7 +662,8 @@ class Pieform {/*{{{*/
      * @param string $key    The key of the property to change.
      * @param string $value  The value to set the property to
      */
-    public function set_property($key, $value) {
+    public function set_property($key, $value)
+    {
         if (array_key_exists($key, $this->data)) {
             $this->data[$key] = $value;
         }
@@ -674,7 +674,8 @@ class Pieform {/*{{{*/
      *
      * @return bool
      */
-    public function is_submitted() {/*{{{*/
+    public function is_submitted()
+    {/*{{{*/
         return $this->submitted;
     }/*}}}*/
 
@@ -683,7 +684,8 @@ class Pieform {/*{{{*/
      *
      * @return bool
      */
-    public function submitted_by_js() {/*{{{*/
+    public function submitted_by_js()
+    {/*{{{*/
         return $this->submitted_by_js;
     }/*}}}*/
 
@@ -692,7 +694,8 @@ class Pieform {/*{{{*/
      *
      * @return string
      */
-    public function get_form_tag() {/*{{{*/
+    public function get_form_tag()
+    {/*{{{*/
         $result = '<form class="pieform';
         if ($this->has_errors()) {
             $result .= ' error';
@@ -703,7 +706,7 @@ class Pieform {/*{{{*/
         $result .= '"';
         foreach (array('name', 'method', 'action') as $attribute) {
             // empty action tags cause validation errors
-            if($this->data[$attribute] !== ''){
+            if ($this->data[$attribute] !== '') {
                 $result .= ' ' . $attribute . '="' . self::hsc($this->data[$attribute]) . '"';
             }
         }
@@ -730,7 +733,8 @@ class Pieform {/*{{{*/
      * @param boolean Whether to include the <form...></form> tags in the output
      * @return string The form as HTML
      */
-    public function build($outputformtags=true) {/*{{{*/
+    public function build($outputformtags = true)
+    {/*{{{*/
         $result = '';
 
         // Builds the HTML each element (see the build_element_html method for
@@ -746,14 +750,12 @@ class Pieform {/*{{{*/
                             $this->build_element_html($subsubelement);
                         }
                         unset($subsubelement);
-                    }
-                    else {
+                    } else {
                         $this->build_element_html($subelement);
                     }
                 }
                 unset($subelement);
-            }
-            else {
+            } else {
                 $this->build_element_html($element);
             }
         }
@@ -805,20 +807,19 @@ class Pieform {/*{{{*/
 
             $result = ob_get_contents();
             ob_end_clean();
-        }
-        else {
+        } else {
             // No template being used - instead use a renderer
             if ($outputformtags) {
                 $result = $this->get_form_tag() . "\n";
             }
 
-            if ($this->has_required_fields) {
-                $result .= '<div class="form-group requiredmarkerdesc';
-                if ($this->all_required_field_labels_hidden || $this->get_property('hiderequiredheader')) {
-                    $result .= ' d-none';
-                }
-                $result .= '">' . get_string('requiredfields', 'pieforms', $this->get_property('requiredmarker')) . '</div>';
-            }
+            // if ($this->has_required_fields) {
+            //     $result .= '<div class="form-group requiredmarkerdesc';
+            //     if ($this->all_required_field_labels_hidden || $this->get_property('hiderequiredheader')) {
+            //         $result .= ' d-none';
+            //     }
+            //     $result .= '">' . get_string('requiredfields', 'pieforms', $this->get_property('requiredmarker')) . '</div>';
+            // }
             if ($this->has_oneof_fields) {
                 $result .= '<div class="form-group oneofmarkerdesc">' . get_string('oneoffields', 'pieforms', $this->get_property('oneofmarker')) . '</div>';
             }
@@ -867,9 +868,11 @@ class Pieform {/*{{{*/
         // form has been submitted the javascript from the first page load is
         // still active in the document
         // 2) The form is NOT a JS form, but has a presubmitcallback
-        if ($outputformtags &&
+        if (
+            $outputformtags &&
             (($this->data['jsform'] && !$this->submitted)
-             || (!$this->data['jsform'] && $this->data['presubmitcallback']))) {
+                || (!$this->data['jsform'] && $this->data['presubmitcallback']))
+        ) {
             // Establish which buttons in the form are submit buttons. This is
             // used to detect which button was pressed to cause the form
             // submission
@@ -905,7 +908,8 @@ class Pieform {/*{{{*/
      * @return mixed          The element's value. <kbd>null</kbd> if no value
      *                        is available for the element.
      */
-    public function get_value($element) {/*{{{*/
+    public function get_value($element)
+    {/*{{{*/
         if (isset($element['readonly']) && $element['readonly'] && isset($element['defaultvalue'])) {
             return $element['defaultvalue'];
         }
@@ -919,11 +923,9 @@ class Pieform {/*{{{*/
         // aren't normally returned using a standard form.
         if (isset($element['value'])) {
             return $element['value'];
-        }
-        else if ($this->submitted && isset($global[$element['name']]) && $element['type'] != 'submit') {
+        } else if ($this->submitted && isset($global[$element['name']]) && $element['type'] != 'submit') {
             return $global[$element['name']];
-        }
-        else if (isset($element['defaultvalue'])) {
+        } else if (isset($element['defaultvalue'])) {
             return $element['defaultvalue'];
         }
         return null;
@@ -936,7 +938,8 @@ class Pieform {/*{{{*/
      *
      * @return array The elements of the form
      */
-    public function get_elements() {/*{{{*/
+    public function get_elements()
+    {/*{{{*/
         $elements = array();
         foreach ($this->data['elements'] as $name => $element) {
             if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
@@ -945,13 +948,11 @@ class Pieform {/*{{{*/
                         foreach ($subelement['elements'] as $subsubname => $subsubelement) {
                             $elements[] = $subsubelement;
                         }
-                    }
-                    else {
+                    } else {
                         $elements[] = $subelement;
                     }
                 }
-            }
-            else {
+            } else {
                 $elements[] = $element;
             }
         }
@@ -969,7 +970,8 @@ class Pieform {/*{{{*/
      * @return array            The element
      * @throws PieformException If the element could not be found
      */
-    public function get_element($name) {/*{{{*/
+    public function get_element($name)
+    {/*{{{*/
         if (isset($this->elementrefs[$name])) {
             return $this->elementrefs[$name];
         }
@@ -986,7 +988,8 @@ class Pieform {/*{{{*/
      * @return array            The element's option
      * @throws PieformException If the element could not be found
      */
-    public function get_element_option($name, $option) {/*{{{*/
+    public function get_element_option($name, $option)
+    {/*{{{*/
         if (!isset($this->elementrefs[$name])) {
             throw new PieformException('Element "' . $name . '" cannot be found');
         }
@@ -999,7 +1002,8 @@ class Pieform {/*{{{*/
     /**
      * Sends a message back to a form
      */
-    public function reply($returncode, $message, $replacehtml=null) {
+    public function reply($returncode, $message, $replacehtml = null)
+    {
         if ($this->submitted_by_js()) {
             $this->json_reply($returncode, $message, $replacehtml);
         }
@@ -1026,7 +1030,8 @@ class Pieform {/*{{{*/
      *   but for example, you could replace the form with a "thank you" message
      *   after successful submission if you want
      */
-    public function json_reply($returncode, $data=array(), $replacehtml=null) {/*{{{*/
+    public function json_reply($returncode, $data = array(), $replacehtml = null)
+    {/*{{{*/
         if (is_string($data)) {
             $data = array(
                 'message' => $data,
@@ -1035,8 +1040,7 @@ class Pieform {/*{{{*/
         $data['returnCode'] = intval($returncode);
         if ($replacehtml === null) {
             $data['replaceHTML'] = $this->build();
-        }
-        else if (is_string($replacehtml)) {
+        } else if (is_string($replacehtml)) {
             $data['replaceHTML'] = $replacehtml;
         }
         if (isset($this->hashedfields)) {
@@ -1079,7 +1083,8 @@ EOF;
      * @return bool          Whether the element has an error
      * @throws PieformException If the element could not be found
      */
-    public function get_error($name) {/*{{{*/
+    public function get_error($name)
+    {/*{{{*/
         $element = $this->get_element($name);
         return isset($element['error']);
     }/*}}}*/
@@ -1095,7 +1100,8 @@ EOF;
      * @param bool   $isescaped Whether to display error string as escaped or not
      * @throws PieformException  If the element could not be found
      */
-    public function set_error($name, $message, $isescaped = true) {/*{{{*/
+    public function set_error($name, $message, $isescaped = true)
+    {/*{{{*/
         if (is_null($name) && !empty($message)) {
             $this->error = $message;
             return;
@@ -1112,8 +1118,7 @@ EOF;
                                 return;
                             }
                         }
-                    }
-                    else {
+                    } else {
                         if ($subelement['name'] == $name) {
                             $subelement['error'] = $message;
                             $subelement['isescaped'] = ($isescaped) ? true : false;
@@ -1122,8 +1127,7 @@ EOF;
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 if ($key == $name) {
                     $element['error'] = $message;
                     $element['isescaped'] = ($isescaped) ? true : false;
@@ -1140,7 +1144,8 @@ EOF;
      *
      * @return bool Whether there are errors with the form
      */
-    public function has_errors() {/*{{{*/
+    public function has_errors()
+    {/*{{{*/
         foreach ($this->elementrefs as $element) {
             if (isset($element['error'])) {
                 return true;
@@ -1155,7 +1160,8 @@ EOF;
      * @return array An array of elements with errors on them, the empty array
      *               in the result of no errors.
      */
-    public function get_errors() {/*{{{*/
+    public function get_errors()
+    {/*{{{*/
         $result = array();
         foreach ($this->elementrefs as $element) {
             if (isset($element['error'])) {
@@ -1178,7 +1184,8 @@ EOF;
      * @param bool           Add the form name to the element ID string
      * @return string        The ID for the element
      */
-    public function make_id($element, $formname = false) {/*{{{*/
+    public function make_id($element, $formname = false)
+    {/*{{{*/
         $elementid = 'a' . substr(md5(mt_rand()), 0, 4);
         if (isset($element['name'])) {
             $elementid = self::hsc($element['name']);
@@ -1204,12 +1211,13 @@ EOF;
      * @param array $element The element to make a class for
      * @return string        The class for an element
      */
-    public function make_class($element) {/*{{{*/
+    public function make_class($element)
+    {/*{{{*/
         $classes = array();
 
         $formcontrols = array('text', 'textarea', 'select', 'password', 'calendar', 'date', 'expiry');
 
-        if(in_array($element['type'], $formcontrols)){
+        if (in_array($element['type'], $formcontrols)) {
             $classes[] = 'form-control';
         }
 
@@ -1263,7 +1271,8 @@ EOF;
      * @param array $exclude Any attributes to explicitly exclude from adding
      * @return string        The attributes for the element
      */
-    public function element_attributes($element, $exclude=array()) {/*{{{*/
+    public function element_attributes($element, $exclude = array())
+    {/*{{{*/
         static $attributes = array('accesskey', 'autocomplete', 'class', 'dir', 'data-confirm', 'id', 'lang', 'name', 'onclick', 'placeholder', 'size', 'style', 'tabindex');
         $elementattributes = array_diff($attributes, $exclude);
         $result = '';
@@ -1271,8 +1280,7 @@ EOF;
             if (isset($element[$attribute]) && $element[$attribute] !== '') {
                 if ($attribute == 'id') {
                     $value = $this->name . '_' . $element[$attribute];
-                }
-                else {
+                } else {
                     $value = $element[$attribute];
                 }
                 $result .= ' ' . $attribute . '="' . self::hsc($value) . '"';
@@ -1292,8 +1300,8 @@ EOF;
             $result .= ' maxlength="' . intval($element['rules']['maxlength']) . '"';
         }
 
-        if (!in_array('aria-describedby', $exclude ) && $this->element_descriptors($element)) {
-           $result .= ' aria-describedby="' . $this->element_descriptors($element) . '"';
+        if (!in_array('aria-describedby', $exclude) && $this->element_descriptors($element)) {
+            $result .= ' aria-describedby="' . $this->element_descriptors($element) . '"';
         }
 
         foreach (array_diff(array('disabled', 'readonly'), $exclude) as $attribute) {
@@ -1315,7 +1323,8 @@ EOF;
      *
      * @param array $element The element to find descriptors for
      */
-    public function element_descriptors($element) {
+    public function element_descriptors($element)
+    {
         $result = '';
         if (!empty($element['error'])) {
             $result .= $this->name . '_' . $element['id'] . '_error ';
@@ -1333,7 +1342,8 @@ EOF;
      * @param string $name The name of the plugin to include
      * @throws PieformException If the given type or plugin could not be found
      */
-    public function include_plugin($type, $name) {/*{{{*/
+    public function include_plugin($type, $name)
+    {/*{{{*/
         if (!in_array($type, array('element', 'renderer', 'rule'))) {
             throw new PieformException("The type \"$type\" is not allowed for an include plugin");
         }
@@ -1374,7 +1384,8 @@ EOF;
      *                           can specify there own i18n strings for rules
      * @return string            The internationalised string
      */
-    public function i18n($plugin, $pluginname, $key, $element=null) {/*{{{*/
+    public function i18n($plugin, $pluginname, $key, $element = null)
+    {/*{{{*/
         if (!in_array($plugin, array('element', 'renderer', 'rule'))) {
             throw new PieformException("Invalid plugin name '$plugin'");
         }
@@ -1398,7 +1409,6 @@ EOF;
         }
 
         return get_raw_string($plugin . '.' . $pluginname . '.' . $key, 'pieforms');
-
     }/*}}}*/
 
     /**
@@ -1407,7 +1417,8 @@ EOF;
      * @param string $text The text to escape
      * @return string      The text, HTML escaped
      */
-    public static function hsc($text) {/*{{{*/
+    public static function hsc($text)
+    {/*{{{*/
         return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
     }/*}}}*/
 
@@ -1416,12 +1427,12 @@ EOF;
      *
      * @param string $message The message to give to the developer
      */
-    public static function info($message) {/*{{{*/
+    public static function info($message)
+    {/*{{{*/
         $function = 'pieform_info';
         if (function_exists($function)) {
             $function($message);
-        }
-        else {
+        } else {
             trigger_error($message, E_USER_NOTICE);
         }
     }/*}}}*/
@@ -1430,9 +1441,17 @@ EOF;
      * Makes sure that the javascript callbacks for this form are valid javascript
      * function names.
      */
-    private function validate_js_callbacks() {/*{{{*/
-        foreach (array('presubmitcallback', 'postsubmitcallback', 'jssuccesscallback',
-            'jserrorcallback', 'globaljserrorcallback') as $callback) {
+    private function validate_js_callbacks()
+    {/*{{{*/
+        foreach (
+            array(
+                'presubmitcallback',
+                'postsubmitcallback',
+                'jssuccesscallback',
+                'jserrorcallback',
+                'globaljserrorcallback'
+            ) as $callback
+        ) {
             if ($this->data[$callback] != '' && !preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $this->data[$callback])) {
                 throw new PieformException("'{$this->data[$callback]}' is not a valid javascript callback name for callback '$callback'");
             }
@@ -1451,7 +1470,8 @@ EOF;
      *
      * @return array The submitted values
      */
-    private function get_submitted_values() {/*{{{*/
+    private function get_submitted_values()
+    {/*{{{*/
         $result = array();
         $global = ($this->data['method'] == 'get') ? $_GET : $_POST;
         foreach ($this->elementrefs as $name => $element) {
@@ -1483,7 +1503,8 @@ EOF;
      *
      * @param array $values The submitted values from the form
      */
-    private function validate($values) {/*{{{*/
+    private function validate($values)
+    {/*{{{*/
         // Call the overall validation function if it is available
         if (function_exists('pieform_validate')) {
             pieform_validate($this, $values);
@@ -1542,7 +1563,8 @@ EOF;
      * Sets the 'autofocus' property on the first element encountered that has
      * an error on it
      */
-    private function auto_focus_first_error() {/*{{{*/
+    private function auto_focus_first_error()
+    {/*{{{*/
         foreach ($this->data['elements'] as &$element) {
             if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
                 foreach ($element['elements'] as &$subelement) {
@@ -1554,8 +1576,7 @@ EOF;
                             }
                             unset($subsubelement['autofocus']);
                         }
-                    }
-                    else {
+                    } else {
                         if (isset($subelement['error'])) {
                             $subelement['autofocus'] = true;
                             return;
@@ -1563,8 +1584,7 @@ EOF;
                         unset($subelement['autofocus']);
                     }
                 }
-            }
-            else {
+            } else {
                 if (isset($element['error'])) {
                     $element['autofocus'] = true;
                     return;
@@ -1587,7 +1607,8 @@ EOF;
      *
      * @param array &$element The element to build the HTML for
      */
-    private function build_element_html(&$element) {/*{{{*/
+    private function build_element_html(&$element)
+    {/*{{{*/
         // Set ID and class for elements
         $element['id']    = $this->make_id($element);
         $element['class'] = $this->make_class($element);
@@ -1608,8 +1629,7 @@ EOF;
             $function = $this->get_property('helpcallback');
             if (function_exists($function)) {
                 $helpicon = $function($this, $element);
-            }
-            else {
+            } else {
                 $helpicon = '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
             }
             if (!empty($element['helpinlabel'])) {
@@ -1622,34 +1642,34 @@ EOF;
         if (isset($element['title']) && $element['title'] !== '') {
             $title = self::hsc($element['title']);
 
-            if ($this->get_property('requiredmarker') &&
-                (!empty($element['rules']['required']) || !empty($element['rules']['requiredby']))) {
+            if (
+                $this->get_property('requiredmarker') &&
+                (!empty($element['rules']['required']) || !empty($element['rules']['requiredby']))
+            ) {
                 $requiredmarker = ' <span class="requiredmarker">' . $this->get_property('requiredmarker') . '</span>';
                 $this->has_required_fields = true;
                 if (!empty($element['hiddenlabel'])) {
                     $this->all_required_field_labels_hidden = true;
-                }
-                else {
+                } else {
                     $this->all_required_field_labels_hidden = false;
                 }
-            }
-            else {
+            } else {
                 $requiredmarker = '';
             }
 
-            if ($this->get_property('oneofmarker') &&
-                (!empty($element['rules']['oneof']))) {
+            if (
+                $this->get_property('oneofmarker') &&
+                (!empty($element['rules']['oneof']))
+            ) {
                 $oneofmarker = ' <span class="oneofmarker">' . $this->get_property('oneofmarker') . '</span>';
                 $this->has_oneof_fields = true;
-            }
-            else {
+            } else {
                 $oneofmarker = '';
             }
 
             if (!empty($element['hiddenlabel'])) {
                 $labelclass = ' class="visually-hidden"';
-            }
-            else {
+            } else {
                 $labelclass = '';
             }
             $nolabeltypes = array('radio', 'emaillist', 'date', 'files', 'checkboxes', 'bytes');
@@ -1663,8 +1683,7 @@ EOF;
                 // You can style specific non labels to be like labels by accessing the
                 // pseudolabel class attribute.
                 $element['labelhtml'] = '<span class="pseudolabel">' . $title . $requiredmarker . $oneofmarker . $helpiconinlabel . '</span>';
-            }
-            else {
+            } else {
                 $element['labelhtml'] = '<label' . $labelclass . ' for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . $oneofmarker . $helpiconinlabel . '</label>';
             }
         }
@@ -1702,7 +1721,8 @@ EOF;
      * @return array
      * {@internal {PHP5 doesn't support private static const arrays, so this is a method}}
      */
-    private static function get_pieform_defaults() {/*{{{*/
+    private static function get_pieform_defaults()
+    {/*{{{*/
         return array(
             // The method used to submit the form, should always be 'get' or 'post'
             'method' => 'get',
@@ -1838,7 +1858,8 @@ EOF;
         );
     }/*}}}*/
 
-    private function hash_fieldnames() {/*{{{*/
+    private function hash_fieldnames()
+    {/*{{{*/
         // Mess with field names to make it harder for bots to fill in the form
         $ip = self::get_ip();
         $secret = $this->data['spam']['secret'];
@@ -1849,7 +1870,8 @@ EOF;
         }
     }/*}}}*/
 
-    private static function get_ip() {/*{{{*/
+    private static function get_ip()
+    {/*{{{*/
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             return $_SERVER['HTTP_CLIENT_IP'];
         }
@@ -1859,10 +1881,10 @@ EOF;
         return $_SERVER['REMOTE_ADDR'];
     }/*}}}*/
 
-    public function spam_error() {/*{{{*/
+    public function spam_error()
+    {/*{{{*/
         return $this->spamerror;
     }/*}}}*/
-
 }/*}}}*/
 
 
@@ -1886,7 +1908,8 @@ EOF;
  * @param array    $element The element to render
  * @return string           The rendered element
  */
-function pieform_render_element(Pieform $form, $element) {/*{{{*/
+function pieform_render_element(Pieform $form, $element)
+{/*{{{*/
     // If the element is pure markup, don't pass it to the renderer
     if ($element['type'] == 'markup') {
         return $element['value'] . "\n";
@@ -1926,7 +1949,8 @@ function pieform_render_element(Pieform $form, $element) {/*{{{*/
  *
  * @return array
  */
-function pieform_get_headdata() {/*{{{*/
+function pieform_get_headdata()
+{/*{{{*/
     $htmlelements = array();
     $form = null;
     foreach ($GLOBALS['_PIEFORM_REGISTRY'] as $form) {

@@ -3,7 +3,6 @@
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta property="og:title" content="{$PAGETITLE}" />
-    <meta property="og:description" content="{$sitedescription4facebook}" />
     <meta property="og:image" content="{$sitelogo4facebook}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
